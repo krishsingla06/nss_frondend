@@ -5,13 +5,20 @@ import Testcard from "./testcard.js";
 
 const Testlist = () => {
   const context = useContext(userContext);
-  const tests = context;
-  console.log(tests);
-  //render the list of testcards , with sending each test card with testdata as props
+  const { tests } = context;
+  //console.log(tests);
+  if (tests === null) {
+    return <div>Loading...</div>;
+  }
+  const studentdata = tests.studentdata;
+  console.log(studentdata);
+  //render the list of testcards , with sending each test card with testdata as props with unique key
 
   return (
     <div>
-      <Testcard />
+      {studentdata.map((test, index) => {
+        return <Testcard key={index} testdata={test} />;
+      })}
     </div>
   );
 };

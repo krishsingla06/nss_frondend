@@ -10,9 +10,11 @@ const userContext = createContext();
 function App() {
   const [mode, setMode] = useState("light");
   const [namee, setNamee] = useState("student1");
-  const [tests, setTests] = useState();
+  const [tests, setTests] = useState(null);
   // //fetch tests from server with post request with body having namee=student1
   useEffect(() => {
+    //async () => {
+    let ignore = false;
     console.log("useEffect called");
     fetch("http://localhost:8000/getstudentdata", {
       method: "POST",
@@ -26,8 +28,11 @@ function App() {
       })
       .then((data) => {
         console.log(data);
-        setTests(data);
+        if (!ignore) setTests(data);
       });
+    return () => {
+      ignore = true;
+    };
   }, [namee]);
 
   const [text, setText] = useState("");

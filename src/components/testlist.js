@@ -5,7 +5,7 @@ import Testcard from "./testcard.js";
 
 const Testlist = () => {
   const context = useContext(userContext);
-  const { tests } = context;
+  const { tests, namee } = context;
   //console.log(tests);
   if (tests === null) {
     return <div>Loading...</div>;
@@ -17,7 +17,7 @@ const Testlist = () => {
   return (
     <div>
       {studentdata.map((test, index) => {
-        return <Testcard key={index} testdata={test} />;
+        return <Testcard key={index} testdata={test} namee={namee} />;
       })}
     </div>
   );

@@ -5,6 +5,7 @@ import About from "./components/Aboutt";
 import { Routes, Route } from "react-router-dom";
 import { createContext } from "react";
 import Testlist from "./components/testlist.js";
+import TestPage from "./components/testpage.js";
 
 const userContext = createContext();
 function App() {
@@ -27,6 +28,7 @@ function App() {
         return res.json();
       })
       .then((data) => {
+        console.log("Data received");
         console.log(data);
         if (!ignore) setTests(data);
       });
@@ -41,7 +43,7 @@ function App() {
     <userContext.Provider
       value={{ namee, setNamee, text, setText, tests, setTests }}
     >
-      <Navbar title="TextUtils" mode={mode} setMode={setMode} />
+      <Navbar title="JEE Wallah" mode={mode} setMode={setMode} />
       <div
         className="container-fluid " //add ,margin from top
         style={{
@@ -50,19 +52,19 @@ function App() {
           backgroundColor: mode === "dark" ? "#212529" : "white",
         }}
       >
-        <Testlist />
-        {/* <Routes>
+        <Routes>
           <Route
             path="/"
             element={
               <>
                 <h1> Hello </h1>
-                <Textform heading="Enter text to be analysed" mode={mode} />
+                <Testlist />
+                {/* <Textform heading="Enter text to be analysed" mode={mode} /> */}
               </>
             }
           />
-          <Route path="/about" element={<About />} />
-        </Routes> */}
+          <Route path="/test/:testnum/:questionnum" element={<TestPage />} />
+        </Routes>
 
         {/* <Textform heading="Enter text to be analysed" mode={mode} /> */}
         {/* if endpoint is /about then show <About/>  instead of Textform*/}

@@ -18,7 +18,7 @@ const Testcard = (props) => {
   const startclick = async () => {
     //start the test
     console.log("start clicked");
-    const res = await fetch("http://localhost:8000/starttest", {
+    const response = await fetch("http://localhost:8000/starttest", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,21 +30,20 @@ const Testcard = (props) => {
         starttime: new Date().toLocaleString(),
       }),
     });
-    if (res.status !== 200) {
+
+    if (response.status !== 200) {
       alert("Error in starting test");
     } else {
+      const res = await response.json();
       console.log("Test started successfully");
+      console.log("res.questions : ", res.questions);
 
-      let dummytests = tests;
-      dummytests.studentdata.find(
-        (test) => test.testnum === testnum
-      ).started = true;
-      dummytests.studentdata.find(
-        (test) => test.testnum === testnum
-      ).starttime = new Date().toLocaleString();
-      dummytests.studentdata.find(
-        (test) => test.testnum === testnum
-      ).questions = res.questionsandoptions;
+      let dummytests = [...tests];
+      dummytests.find((test) => test.testnum === testnum).started = true;
+      dummytests.find((test) => test.testnum === testnum).starttime =
+        new Date().toLocaleString();
+      dummytests.find((test) => test.testnum === testnum).questions =
+        res.questions;
       await setTests(dummytests);
       console.log("Finally : ", tests);
       navigate(`/test/${testnum}/0`);

@@ -10,8 +10,8 @@ const Testlist = () => {
   if (tests === null) {
     return <div>Loading...</div>;
   }
-  const studentdata = tests.studentdata;
-  console.log(studentdata);
+  const studentdata = tests;
+  //console.log(studentdata);
   //render the list of testcards , with sending each test card with testdata as props with unique key
 
   return (

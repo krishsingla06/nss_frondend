@@ -30,7 +30,7 @@ function App() {
       .then((data) => {
         console.log("Data received");
         console.log(data);
-        if (!ignore) setTests(data);
+        if (!ignore) setTests(data.studentdata);
       });
     return () => {
       ignore = true;
@@ -47,9 +47,11 @@ function App() {
       <div
         className="container-fluid " //add ,margin from top
         style={{
-          width: "100vw",
-          color: mode === "dark" ? "white" : "#212529",
-          backgroundColor: mode === "dark" ? "#212529" : "white",
+          width: "100vw", // Full width
+          height: "100vh", // Full height
+          marginTop: "20px", // Add margin from the top
+          display: "flex",
+          flexDirection: "column", // Ensure content fills the vertical space
         }}
       >
         <Routes>

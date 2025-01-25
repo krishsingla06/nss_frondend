@@ -55,12 +55,62 @@ const Testcard = (props) => {
 
   const continueclick = () => {
     //continue the test
-    console.log("continue clicked");
+    //console.log("continue clicked");
+    navigate(`/test/${testnum}/0`);
   };
 
-  const viewresultclick = () => {
+  const viewresultclick = async () => {
+    navigate(`result/${testnum}`);
     //view the result
-    console.log("view result clicked");
+    // try {
+    //   const testrespone = tests.find((test) => test.testnum === testnum);
+    //   let markedarray = [];
+
+    //   let done = false;
+    //   for (let i = 0; i < testrespone.questions.length; i++) {
+    //     markedarray.push(testrespone.questions[i].marked);
+    //     if (i === testrespone.questions.length - 1) {
+    //       done = true;
+    //     }
+    //   }
+
+    //   if (done) {
+    //     const response = await fetch("http://localhost:8000/endtest", {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       //current time
+    //       body: JSON.stringify({
+    //         testnum,
+    //         namee,
+    //         endtime: new Date().toLocaleString(),
+    //         markedarray,
+    //       }),
+    //     });
+    //     if (response.status !== 200) {
+    //       alert("Error in ending test");
+    //     } else {
+    //       const res = await response.json();
+    //       console.log("Test ended successfully");
+    //       console.log("res : ", res);
+    //       let dummytests = [...tests];
+    //       dummytests.find((test) => test.testnum === testnum).finished = true;
+    //       dummytests.find((test) => test.testnum === testnum).finishtime =
+    //         new Date().toLocaleString();
+    //       dummytests.find((test) => test.testnum === testnum).questions =
+    //         res.questions; // res.questions is the updated questions array with correct answers and user answers
+    //       await setTests(dummytests);
+    //       console.log("Finally : ", tests);
+    //       //navigate(`/test/${testnum}/result`);
+    //     }
+    //   }
+
+    //   console.log("view result clicked");
+    // } catch (err) {
+    //   alert("Error in view result click");
+    //   console.log("Error in view result click : ", err);
+    // }
   };
   //link to different test page for each test based on finished or not
   return (

@@ -6,7 +6,13 @@ const Testpage = () => {
   const { testnum, questionnum } = useParams();
   const navigate = useNavigate();
   const context = useContext(userContext);
-  const { tests, setTests } = context;
+  const { tests, setTests, namee } = context;
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
 
   const [selectedOption, setSelectedOption] = useState(null); // Track selected option
 
@@ -76,8 +82,9 @@ const Testpage = () => {
         if (nextQuestionNum < testdata.questions.length) {
           navigate(`/test/${testnum}/${nextQuestionNum}`);
         } else {
-          alert("Submit the test?");
-          navigate(`/test/${testnum}/result`);
+          console.log("Submit the test?");
+          // alert("Submit the test?");
+          // navigate(`/test/${testnum}/result`);
         }
       }
     };
@@ -112,6 +119,99 @@ const Testpage = () => {
       }
     };
 
+    const handleSubmitClick = async () => {
+      //view the result
+      try {
+        await handleNextClick();
+        const testrespone = tests.find(
+          (test) => test.testnum === parseInt(testnum)
+        );
+        //console.log("testrespone : ", testrespone);
+        let markedarray = [];
+
+        for (let i = 0; i < testrespone.questions.length; i++) {
+          markedarray.push(testrespone.questions[i].marked);
+          if (i === testrespone.questions.length - 1) {
+            console.log("markedarray : ", markedarray);
+            const response = await fetch("http://localhost:8000/endtest", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              //current time
+              body: JSON.stringify({
+                testnum,
+                namee,
+                endtime: new Date().toLocaleString(),
+                markedarray,
+              }),
+            });
+            if (response.status !== 200) {
+              alert("Error in ending test");
+            } else {
+              const res = await response.json();
+              console.log("Test ended successfully");
+              console.log("res : ", res);
+              let dummytests = [...tests];
+              dummytests.find(
+                (test) => test.testnum === parseInt(testnum)
+              ).finished = true;
+              dummytests.find(
+                (test) => test.testnum === parseInt(testnum)
+              ).finishtime = new Date().toLocaleString();
+              dummytests.find(
+                (test) => test.testnum === parseInt(testnum)
+              ).questions = res.questions; // res.questions is the updated questions array with correct answers and user answers
+              await setTests(dummytests);
+              //await setTests(dummytests);
+              console.log("Finally : ", tests);
+              //navigate to home back
+
+              navigate(`/result/${testnum}`, { replace: true }); //replace true
+            }
+          }
+        }
+
+        console.log("view result clicked");
+      } catch (err) {
+        alert("Error in view result click");
+        console.log("Error in view result click : ", err);
+      }
+    };
+
+    //------------------------------
+    const handleQuestionClick = async (questionindex) => {
+      await (async () =>
+        (dummytests.find(
+          (test) => test.testnum === parseInt(testnum)
+        ).questions[parseInt(questionnum)].marked =
+          selectedOption !== null ? selectedOption : -1))();
+
+      await setTests(dummytests);
+
+      //make an api call to save the selected option
+      const apiresponse = await fetch("http://localhost:8000/saveresponse", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          namee: context.namee,
+          testnum: parseInt(testnum),
+          questionnum: parseInt(questionnum),
+          selectedOption: selectedOption !== null ? selectedOption : -1,
+        }),
+      });
+
+      if (apiresponse.status !== 200) {
+        alert("Error in saving response");
+      } else {
+        console.log("Response saved successfully");
+        navigate(`/test/${testnum}/${questionindex}`);
+      }
+    };
+    //------------------------------
+
     return (
       <div
         style={{
@@ -127,9 +227,70 @@ const Testpage = () => {
           alignItems: "center",
         }}
       >
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            right: isSidebarOpen ? "0px" : "-220px", // Adjust sidebar visibility
+            width: "200px",
+            height: "100vh",
+            backgroundColor: "#f5f5f5",
+            borderLeft: "1px solid #ccc",
+            transition: "right 0.3s ease",
+            zIndex: 1000,
+            padding: "10px",
+            boxShadow: "0 0 5px rgba(0,0,0,0.2)",
+          }}
+        >
+          {/* Sidebar Toggle Button */}
+          <button
+            onClick={toggleSidebar}
+            style={{
+              position: "absolute",
+              top: "60px",
+              left: "-90px",
+              width: "40px",
+              height: "40px",
+              backgroundColor: "#007BFF",
+              color: "#fff",
+              border: "none",
+              borderRadius: "50%",
+              cursor: "pointer",
+              boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+            }}
+          >
+            {isSidebarOpen ? "<<" : ">>"}
+          </button>
+
+          {/* Question Numbers */}
+          <h3>Questions</h3>
+          {testdata.questions.map((question, index) => (
+            <button
+              key={index}
+              onClick={() => handleQuestionClick(index)} // Handle question click
+              //onClick={() => navigate(`/test/${testnum}/${index}`)} // Navigate to question
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "10px",
+                marginBottom: "5px",
+                backgroundColor: question.marked !== -1 ? "green" : "white",
+                color: question.marked !== -1 ? "white" : "black",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                cursor: "pointer",
+                textAlign: "center",
+              }}
+            >
+              Q{index + 1}
+            </button>
+          ))}
+        </div>
+
         <h1 style={{ textAlign: "center", color: "#333", marginTop: "20px" }}>
           Test Page
         </h1>
+
         <div
           style={{
             width: "95%",
@@ -235,7 +396,11 @@ const Testpage = () => {
             }
 
             <button
-              onClick={handleNextClick}
+              onClick={
+                questionnum < testdata.questions.length - 1
+                  ? handleNextClick
+                  : handleSubmitClick
+              }
               style={{
                 padding: "8px 15px", // Smaller padding
                 backgroundColor: "#2196F3",

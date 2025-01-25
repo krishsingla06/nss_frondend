@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import { createContext } from "react";
 import Testlist from "./components/testlist.js";
 import TestPage from "./components/testpage.js";
+import Result from "./components/result.js";
 
 const userContext = createContext();
 function App() {
@@ -66,6 +67,7 @@ function App() {
             }
           />
           <Route path="/test/:testnum/:questionnum" element={<TestPage />} />
+          <Route path="/result/:testnum" element={<Result />} />
         </Routes>
 
         {/* <Textform heading="Enter text to be analysed" mode={mode} /> */}

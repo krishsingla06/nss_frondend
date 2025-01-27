@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { userContext } from "../App";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -7,8 +7,10 @@ const Testpage = () => {
   const navigate = useNavigate();
   const context = useContext(userContext);
   const { tests, setTests, namee } = context;
+  const [elapsedTime, setElapsedTime] = useState(""); // Track elapsed time
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const starttimeRef = useRef(-1);
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -25,9 +27,30 @@ const Testpage = () => {
       if (testdata) {
         const markedOption = testdata.questions[parseInt(questionnum)].marked;
         setSelectedOption(markedOption);
+        starttimeRef.current = new Date(testdata.starttime);
+        //starttimeRef.current = testdata.starttime;
       }
     }
   }, [tests, questionnum, testnum]);
+
+  // Update the timer
+  useEffect(() => {
+    if (starttimeRef.current !== -1) {
+      const interval = setInterval(() => {
+        const currentTime = new Date();
+        const elapsed = Math.floor((currentTime - starttimeRef.current) / 1000); // Elapsed time in seconds
+        const hours = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+        const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(
+          2,
+          "0"
+        );
+        const seconds = String(elapsed % 60).padStart(2, "0");
+        setElapsedTime(`${hours}:${minutes}:${seconds}`);
+      }, 1000);
+
+      return () => clearInterval(interval); // Cleanup interval on unmount
+    }
+  }, []);
 
   if (!tests) {
     return <div>Loading...</div>;
@@ -83,8 +106,6 @@ const Testpage = () => {
           navigate(`/test/${testnum}/${nextQuestionNum}`);
         } else {
           console.log("Submit the test?");
-          // alert("Submit the test?");
-          // navigate(`/test/${testnum}/result`);
         }
       }
     };
@@ -171,7 +192,6 @@ const Testpage = () => {
             }
           }
         }
-
         console.log("view result clicked");
       } catch (err) {
         alert("Error in view result click");
@@ -287,9 +307,9 @@ const Testpage = () => {
           ))}
         </div>
 
-        <h1 style={{ textAlign: "center", color: "#333", marginTop: "20px" }}>
+        {/* <h1 style={{ textAlign: "center", color: "#333", marginTop: "20px" }}>
           Test Page
-        </h1>
+        </h1> */}
 
         <div
           style={{
@@ -302,9 +322,32 @@ const Testpage = () => {
             margin: "0 auto",
           }}
         >
-          <h2 style={{ textAlign: "center", color: "#555" }}>
-            Test Number: {testnum} | Question Number: {questionnum}
-          </h2>
+          <h5 style={{ textAlign: "center", color: "#555" }}>
+            Test Number: {testnum} | Question Number: {questionnum} | Start time
+            : {starttimeRef.current.toLocaleString()}
+          </h5>
+          {/* <h6 style={{ textAlign: "center", color: "#555" }}>
+            Timer: {elapsedTime}
+          </h6> */}
+
+          {/* Since total time i am assuming is 3 hours for each test , show remaining time also , updating it each second*/}
+          <h6 style={{ textAlign: "center", color: "#555" }}>
+            Remaining Time:{" "}
+            {(() => {
+              const totalSeconds =
+                3 * 60 * 60 -
+                Math.floor(
+                  (new Date() - new Date(starttimeRef.current)) / 1000
+                );
+              const hours = Math.floor(totalSeconds / 3600);
+              const minutes = Math.floor((totalSeconds % 3600) / 60);
+              const seconds = totalSeconds % 60;
+              return `${String(hours).padStart(2, "0")}:${String(
+                minutes
+              ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+            })()}
+          </h6>
+
           <div
             style={{
               backgroundColor: "#f0f0f0",

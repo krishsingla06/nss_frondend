@@ -3,6 +3,14 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
+  const handleLogout = () => {
+    // Remove the token from localStorage
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
+    // Redirect to login page
+    window.location.href = "/login";
+  };
   return (
     <div>
       <nav
@@ -27,8 +35,23 @@ const Navbar = (props) => {
                   About
                 </Link>
               </li>
+              <button
+                className="btn btn-primary"
+                style={{
+                  color: "white",
+                  height: "38px",
+                  width: "100px",
+                  marginLeft: "1000px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={handleLogout} // Call the logout function on click
+              >
+                Logout
+              </button>
             </ul>
-            <div className="form-check form-switch ms-auto">
+            {/* <div className="form-check form-switch ms-auto">
               <input
                 className="form-check-input"
                 type="checkbox"
@@ -46,7 +69,7 @@ const Navbar = (props) => {
               >
                 {props.mode === "dark" ? "Dark Mode" : "Light Mode"}
               </label>
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>

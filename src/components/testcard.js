@@ -24,6 +24,12 @@ const Testcard = (props) => {
   };
 
   const startclick = async () => {
+    let starttimee = new Date().toLocaleString();
+    console.log("scheduled : ", scheduled);
+    console.log("starttimee : ", starttimee);
+    if (starttimee > scheduled) {
+      starttimee = scheduled;
+    }
     //start the test
     console.log("start clicked");
     const response = await fetch("http://localhost:8000/starttest", {
@@ -35,7 +41,8 @@ const Testcard = (props) => {
       body: JSON.stringify({
         testnum,
         namee,
-        starttime: new Date().toLocaleString(),
+        starttime: starttimee,
+        //starttime: new Date().toLocaleString(),
       }),
     });
 

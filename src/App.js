@@ -12,6 +12,7 @@ import SignUp from "./components/signup.js";
 import AdminPage from "./components/adminpage.js";
 import TestDetail from "./components/TestDetail.js";
 import Addtest from "./components/Addtest.js";
+import backgroundImage from "./background.jpg";
 
 const userContext = createContext();
 function App() {
@@ -119,13 +120,18 @@ function App() {
     >
       <Navbar title="JEE Wallah" mode={mode} setMode={setMode} />
       <div
-        className="container-fluid " //add ,margin from top
+        className="container-fluid"
         style={{
           width: "100vw", // Full width
           height: "100vh", // Full height
           marginTop: "20px", // Add margin from the top
           display: "flex",
           flexDirection: "column", // Ensure content fills the vertical space
+          backgroundImage: `url(${backgroundImage})`, // Correct path to image
+          backgroundRepeat: "no-repeat", // Prevent tiling
+          backgroundPosition: "center", // Center the image
+          backgroundSize: "cover", // Ensure the whole image is visible
+          position: "relative",
         }}
       >
         <Routes>

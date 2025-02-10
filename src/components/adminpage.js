@@ -1,75 +1,95 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from "../App";
+import "D:/my-app/src/components/style.css";
 
 const Adminpage = () => {
   const { testsadmin, userlist } = useContext(userContext);
   const navigate = useNavigate();
 
   const handleTestClick = (testnum) => {
-    // Navigate to a detailed view of the selected test
     navigate(`/admin/test/${testnum}`);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-pink-200 via-yellow-300 to-blue-400 p-8">
-      <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-lg p-8 space-y-8">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">
-          Admin Dashboard
+    <div className="min-h-screen bg-gradient-to-br from-sky-100 via-mint-200 to-lavender-300 p-8 flex items-center justify-center">
+      <div className="w-full max-w-5xl bg-white/95 shadow-2xl rounded-2xl p-10 space-y-10 backdrop-blur-lg">
+        {/* Animated Header */}
+        <h1 className="text-5xl font-extrabold text-center mb-8 animate-float">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-teal-600">
+            Admin Dashboard
+          </span>
         </h1>
 
         {/* Tests Section */}
-        <section className="space-y-6">
-          <h2 className="text-3xl font-semibold text-purple-800">
-            Manage Tests
+        <section className="space-y-8">
+          <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
+            <span className="pb-2 border-b-4 border-gradient-to-r from-indigo-400 to-teal-400">
+              Manage Tests
+            </span>
           </h2>
           {testsadmin?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
               {testsadmin.map((test) => (
                 <button
+                  type="button"
+                  class="btn btn-outline-primary m-1"
                   key={test.testnum}
                   onClick={() => handleTestClick(test.testnum)}
-                  className="bg-gradient-to-r from-pink-500 to-yellow-500 text-white font-semibold py-4 px-6 rounded-lg shadow-lg hover:bg-gradient-to-r hover:from-pink-600 hover:to-yellow-600 focus:outline-none transition-all duration-300 transform hover:scale-105"
                 >
-                  Test {test.testnum} (Scheduled: {test.scheduled})
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <span className="relative z-10 text-lg tracking-wide">
+                    Test {test.testnum}
+                  </span>
                 </button>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">No tests available.</p>
+            <p className="text-gray-600 text-center text-xl font-medium">
+              No tests available.
+            </p>
           )}
         </section>
 
-        <div className="text-center">
-          <Link
-            to="/admin/addtest"
-            className="bg-gradient-to-r from-green-400 to-teal-400 text-white font-semibold py-4 px-6 rounded-lg shadow-lg hover:bg-gradient-to-r hover:from-green-500 hover:to-teal-500 focus:outline-none transition-all duration-300"
+        <div className="flex justify-start px-4 md:ml-[16.666%] lg:ml-0 w-full">
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            onClick={() => navigate("/admin/addtest")}
           >
-            Add Test
-          </Link>
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <span className="relative z-10 text-lg tracking-wide">
+              Add New Test
+            </span>
+          </button>
         </div>
 
         {/* Users Section */}
-        <section className="space-y-6">
-          <h2 className="text-3xl font-semibold text-teal-800">Manage Users</h2>
+        <section className="space-y-8">
+          <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
+            <span className="pb-2 border-b-4 border-gradient-to-r from-teal-400 to-indigo-400">
+              Users List
+            </span>
+          </h2>
           {userlist?.length > 0 ? (
-            <ul className="space-y-4">
+            <ul className="space-y-1">
               {userlist.map((user) => (
                 <li
                   key={user.username}
-                  className="bg-gradient-to-r from-green-100 to-teal-100 p-4 rounded-lg shadow-md hover:bg-gradient-to-r hover:from-green-200 hover:to-teal-200 transition-all duration-200 flex justify-between items-center"
+                  className="bg-white p-1 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex justify-between items-center border-l-4 border-teal-400 hover:border-indigo-500 group"
                 >
-                  <span className="font-medium text-lg text-teal-800">
-                    {user.username}
-                  </span>
-                  <span className="text-sm text-gray-600">
-                    ID: {user.username}
-                  </span>
+                  <div className="flex-1">
+                    <span className="font-semibold text-gray-800 text-lg tracking-wide">
+                      {user.username}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500">No users available.</p>
+            <p className="text-gray-600 text-center text-xl font-medium">
+              No users available.
+            </p>
           )}
         </section>
       </div>

@@ -7,7 +7,7 @@ const Testcard = (props) => {
   const testnum = props.testdata.testnum;
   const scheduled = props.testdata.scheduled;
   const started = props.testdata.started;
-  const starttime = props.testdata.starttime;
+  let starttime = props.testdata.starttime;
   const finished = props.testdata.finished;
   const finishtime = props.testdata.finishtime;
   const namee = props.namee;
@@ -15,7 +15,6 @@ const Testcard = (props) => {
   const { tests, setTests } = context;
   const navigate = useNavigate();
 
-  //function to check if current time is greater than scheduled time or not
 
   const checkScheduledTime = () => {
     const scheduledTime = new Date(scheduled);
@@ -24,25 +23,29 @@ const Testcard = (props) => {
   };
 
   const startclick = async () => {
-    let starttimee = new Date().toLocaleString();
-    console.log("scheduled : ", scheduled);
+    let starttimee = new Date();
+    let scheduledd = new Date(scheduled);
+    console.log("scheduledd : ", scheduledd);
     console.log("starttimee : ", starttimee);
-    if (starttimee > scheduled) {
-      starttimee = scheduled;
+    if (starttimee > scheduledd) {
+      console.log("starttimee > scheduledd");
+      starttime = scheduledd.toLocaleString();
+    } else {
+      console.log("starttimee < scheduledd");
+      starttime = starttimee.toLocaleString();
     }
-    //start the test
     console.log("start clicked");
+    console.log("starttime : ", starttime);
     const response = await fetch("http://localhost:8000/starttest", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      //current time
+
       body: JSON.stringify({
         testnum,
         namee,
-        starttime: starttimee,
-        //starttime: new Date().toLocaleString(),
+        starttime: starttime,
       }),
     });
 
@@ -55,26 +58,18 @@ const Testcard = (props) => {
 
       let dummytests = [...tests];
       dummytests.find((test) => test.testnum === testnum).started = true;
-      dummytests.find((test) => test.testnum === testnum).starttime =
-        new Date().toLocaleString();
+      dummytests.find((test) => test.testnum === testnum).starttime = starttime;
       dummytests.find((test) => test.testnum === testnum).questions =
         res.questions;
       await setTests(dummytests);
       console.log("Finally : ", tests);
       navigate(`/test/${testnum}/0`);
     }
-    //redirect to test page
-
-    //fetch request to start the test
   };
 
   const continueclick = () => {
-    //continue the test
-    //console.log("continue clicked");
     if (checkTimeLimit()) {
       alert("Time limit exceeded. You cannot continue the test.");
-      //set the test as finished and finished time as start time + 3 hours
-
       const dummytests = [...tests];
       dummytests.find((test) => test.testnum === testnum).finished = true;
       dummytests.find((test) => test.testnum === testnum).finishtime = new Date(
@@ -91,14 +86,12 @@ const Testcard = (props) => {
     navigate(`result/${testnum}`);
   };
 
-  // Check if more than 3 hours have passed since the test start time
   const checkTimeLimit = () => {
     const startTime = new Date(starttime);
     const currentTime = new Date();
     const timeDifference = (currentTime - startTime) / (1000 * 60 * 60); // time in hours
     return timeDifference > 3;
   };
-  //link to different test page for each test based on finished or not
   return (
     <>
       <div className="card">

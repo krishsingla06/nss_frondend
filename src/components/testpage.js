@@ -7,7 +7,7 @@ const Testpage = () => {
   const navigate = useNavigate();
   const context = useContext(userContext);
   const { tests, setTests, namee } = context;
-  const [elapsedTime, setElapsedTime] = useState(""); // Track elapsed time
+  const [elapsedTime, setElapsedTime] = useState("");
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const starttimeRef = useRef(-1);
@@ -16,7 +16,7 @@ const Testpage = () => {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  const [selectedOption, setSelectedOption] = useState(null); // Track selected option
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     if (tests) {
@@ -28,17 +28,15 @@ const Testpage = () => {
         const markedOption = testdata.questions[parseInt(questionnum)].marked;
         setSelectedOption(markedOption);
         starttimeRef.current = new Date(testdata.starttime);
-        //starttimeRef.current = testdata.starttime;
       }
     }
   }, [tests, questionnum, testnum]);
 
-  // Update the timer
   useEffect(() => {
     if (starttimeRef.current !== -1) {
       const interval = setInterval(() => {
         const currentTime = new Date();
-        const elapsed = Math.floor((currentTime - starttimeRef.current) / 1000); // Elapsed time in seconds
+        const elapsed = Math.floor((currentTime - starttimeRef.current) / 1000);
         const hours = String(Math.floor(elapsed / 3600)).padStart(2, "0");
         const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(
           2,
@@ -48,7 +46,7 @@ const Testpage = () => {
         setElapsedTime(`${hours}:${minutes}:${seconds}`);
       }, 1000);
 
-      return () => clearInterval(interval); // Cleanup interval on unmount
+      return () => clearInterval(interval);
     }
   }, []);
 
@@ -68,9 +66,9 @@ const Testpage = () => {
 
     const handleOptionClick = (index) => {
       if (selectedOption === index) {
-        setSelectedOption(null); // Deselect the option
+        setSelectedOption(null);
       } else {
-        setSelectedOption(index); // Update the selected option
+        setSelectedOption(index);
       }
     };
 
@@ -83,7 +81,6 @@ const Testpage = () => {
 
       await setTests(dummytests);
 
-      //make an api call to save the selected option
       const apiresponse = await fetch("http://localhost:8000/saveresponse", {
         method: "POST",
         headers: {
@@ -141,13 +138,11 @@ const Testpage = () => {
     };
 
     const handleSubmitClick = async () => {
-      //view the result
       try {
         await handleNextClick();
         const testrespone = tests.find(
           (test) => test.testnum === parseInt(testnum)
         );
-        //console.log("testrespone : ", testrespone);
         let markedarray = [];
 
         for (let i = 0; i < testrespone.questions.length; i++) {
@@ -159,7 +154,6 @@ const Testpage = () => {
               headers: {
                 "Content-Type": "application/json",
               },
-              //current time
               body: JSON.stringify({
                 testnum,
                 namee,
@@ -182,13 +176,10 @@ const Testpage = () => {
               ).finishtime = new Date().toLocaleString();
               dummytests.find(
                 (test) => test.testnum === parseInt(testnum)
-              ).questions = res.questions; // res.questions is the updated questions array with correct answers and user answers
+              ).questions = res.questions;
               await setTests(dummytests);
-              //await setTests(dummytests);
               console.log("Finally : ", tests);
-              //navigate to home back
-
-              navigate(`/result/${testnum}`, { replace: true }); //replace true
+              navigate(`/result/${testnum}`, { replace: true });
             }
           }
         }
@@ -209,7 +200,6 @@ const Testpage = () => {
 
       await setTests(dummytests);
 
-      //make an api call to save the selected option
       const apiresponse = await fetch("http://localhost:8000/saveresponse", {
         method: "POST",
         headers: {
@@ -251,7 +241,7 @@ const Testpage = () => {
           style={{
             position: "fixed",
             top: 0,
-            right: isSidebarOpen ? "0px" : "-220px", // Adjust sidebar visibility
+            right: isSidebarOpen ? "0px" : "-220px",
             width: "200px",
             height: "100vh",
             backgroundColor: "#f5f5f5",
@@ -262,7 +252,6 @@ const Testpage = () => {
             boxShadow: "0 0 5px rgba(0,0,0,0.2)",
           }}
         >
-          {/* Sidebar Toggle Button */}
           <button
             onClick={toggleSidebar}
             style={{
@@ -282,13 +271,11 @@ const Testpage = () => {
             {isSidebarOpen ? "<<" : ">>"}
           </button>
 
-          {/* Question Numbers */}
           <h3>Questions</h3>
           {testdata.questions.map((question, index) => (
             <button
               key={index}
-              onClick={() => handleQuestionClick(index)} // Handle question click
-              //onClick={() => navigate(`/test/${testnum}/${index}`)} // Navigate to question
+              onClick={() => handleQuestionClick(index)}
               style={{
                 display: "block",
                 width: "100%",
@@ -307,14 +294,9 @@ const Testpage = () => {
           ))}
         </div>
 
-        {/* <h1 style={{ textAlign: "center", color: "#333", marginTop: "20px" }}>
-          Test Page
-        </h1> */}
-
         <div
           style={{
             width: "95%",
-            //maxWidth: "1000px",
             padding: "20px",
             backgroundColor: "#fff",
             borderRadius: "12px",
@@ -326,11 +308,7 @@ const Testpage = () => {
             Test Number: {testnum} | Question Number: {questionnum} | Start time
             : {starttimeRef.current.toLocaleString()}
           </h5>
-          {/* <h6 style={{ textAlign: "center", color: "#555" }}>
-            Timer: {elapsedTime}
-          </h6> */}
 
-          {/* Since total time i am assuming is 3 hours for each test , show remaining time also , updating it each second*/}
           <h6 style={{ textAlign: "center", color: "#555" }}>
             Remaining Time:{" "}
             {(() => {
@@ -372,7 +350,7 @@ const Testpage = () => {
               (option, index) => (
                 <button
                   key={index}
-                  onClick={() => handleOptionClick(index)} // Handle button click
+                  onClick={() => handleOptionClick(index)}
                   style={{
                     backgroundColor:
                       selectedOption === index ? "#4CAF50" : "#fff",
@@ -388,7 +366,7 @@ const Testpage = () => {
                         : "0 2px 4px rgba(0, 0, 0, 0.1)",
                     transition: "all 0.3s ease",
                     fontSize: "16px",
-                    width: "100%", // Full width for option buttons
+                    width: "100%",
                   }}
                 >
                   {option}
@@ -409,28 +387,28 @@ const Testpage = () => {
               <button
                 onClick={handlePrevClick}
                 style={{
-                  padding: "8px 15px", // Smaller padding
+                  padding: "8px 15px",
                   backgroundColor: "#f44336",
                   color: "white",
                   border: "none",
                   borderRadius: "8px",
                   cursor: "pointer",
                   transition: "background-color 0.3s",
-                  width: "auto", // Let the button size based on content
-                  fontSize: "14px", // Smaller font size
+                  width: "auto",
+                  fontSize: "14px",
                 }}
                 {...(questionnum === "0" && {
                   disabled: true,
                   style: {
-                    padding: "8px 15px", // Smaller padding
-                    backgroundColor: "#ccc", // Lighter background color
+                    padding: "8px 15px",
+                    backgroundColor: "#ccc",
                     color: "white",
                     border: "none",
                     borderRadius: "8px",
                     cursor: "not-allowed",
                     transition: "background-color 0.3s",
-                    width: "auto", // Let the button size based on content
-                    fontSize: "14px", // Smaller font size
+                    width: "auto",
+                    fontSize: "14px",
                   },
                 })}
               >
@@ -445,15 +423,15 @@ const Testpage = () => {
                   : handleSubmitClick
               }
               style={{
-                padding: "8px 15px", // Smaller padding
+                padding: "8px 15px",
                 backgroundColor: "#2196F3",
                 color: "white",
                 border: "none",
                 borderRadius: "8px",
                 cursor: "pointer",
                 transition: "background-color 0.3s",
-                width: "auto", // Let the button size based on content
-                fontSize: "14px", // Smaller font size
+                width: "auto",
+                fontSize: "14px",
               }}
             >
               {questionnum < testdata.questions.length - 1 ? "Next" : "Submit"}
@@ -461,36 +439,6 @@ const Testpage = () => {
           </div>
         </div>
       </div>
-
-      // <div>
-      //   <h1>Test Page</h1>
-      //   <h2>Test Number: {testnum}</h2>
-      //   <h2>Question Number: {questionnum}</h2>
-      //   <p>{testdata.questions[parseInt(questionnum)].q}</p>
-      //   {testdata.questions[parseInt(questionnum)].options.map(
-      //     (option, index) => (
-      //       <button
-      //         key={index}
-      //         onClick={() => handleOptionClick(index)} // Handle button click
-      //         style={{
-      //           backgroundColor: selectedOption === index ? "green" : "white",
-      //           color: selectedOption === index ? "white" : "black",
-      //           border: "1px solid #ccc",
-      //           padding: "10px",
-      //           margin: "5px",
-      //           cursor: "pointer",
-      //         }}
-      //       >
-      //         {option}
-      //       </button>
-      //     )
-      //   )}
-      //   {questionnum > 0 && <button onClick={handlePrevClick}>Previous</button>}
-
-      //   <button onClick={handleNextClick}>
-      //     {questionnum < testdata.questions.length - 1 ? "Next" : "Submit"}
-      //   </button>
-      // </div>
     );
   }
 };

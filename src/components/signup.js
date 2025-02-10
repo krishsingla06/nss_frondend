@@ -17,7 +17,6 @@ const SignUp = () => {
       return;
     }
 
-    // Replace this with your API call for sign-up
     if (role === "student") {
       const response = await fetch("http://localhost:8000/signup", {
         method: "POST",
@@ -30,7 +29,7 @@ const SignUp = () => {
       console.log(response);
 
       if (response.status === 200) {
-        navigate("/login"); // Redirect to login page after successful sign-up
+        navigate("/login"); 
       } else {
         alert("Sign-up failed");
       }
@@ -46,7 +45,7 @@ const SignUp = () => {
       console.log(response);
 
       if (response.status === 200) {
-        navigate("/login"); // Redirect to login page after successful sign-up
+        navigate("/login"); 
       } else {
         alert("Sign-up failed");
       }

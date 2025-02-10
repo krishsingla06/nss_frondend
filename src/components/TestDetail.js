@@ -3,13 +3,12 @@ import { useParams } from "react-router-dom";
 import { userContext } from "../App";
 
 const TestDetail = () => {
-  const { testnum } = useParams(); // Get the testnum from the URL
-  const { testsadmin } = useContext(userContext); // Access the testsadmin from context
+  const { testnum } = useParams();
+  const { testsadmin } = useContext(userContext); 
 
   console.log("Test ID: ", testnum);
   console.log("Tests Admin: ", testsadmin);
 
-  // Find the test using the testnum
   const test = testsadmin?.find((test) => test.testnum === parseInt(testnum));
 
   if (!test) {
@@ -28,8 +27,6 @@ const TestDetail = () => {
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
           Test {test.testnum} (Scheduled: {test.scheduled})
         </h1>
-
-        {/* Questions Section */}
         <ul className="space-y-4">
           {test.questions.map((question, index) => (
             <li key={index} className="bg-gray-200 p-4 rounded-md shadow-inner">

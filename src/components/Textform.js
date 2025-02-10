@@ -38,7 +38,7 @@ const Textform = (props) => {
       <textarea
         className="form-control"
         id="exampleTextarea"
-        rows="16" // Number of visible lines
+        rows="16"
         style={{
           resize: "vertical",
           overflow: "auto",

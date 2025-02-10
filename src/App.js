@@ -12,7 +12,7 @@ import SignUp from "./components/signup.js";
 import AdminPage from "./components/adminpage.js";
 import TestDetail from "./components/TestDetail.js";
 import Addtest from "./components/Addtest.js";
-import backgroundImage from "./background.jpg";
+//import backgroundImage from "./background.jpg";
 
 const userContext = createContext();
 function App() {
@@ -22,9 +22,8 @@ function App() {
   const [testsadmin, setTestsadmin] = useState(null);
   const [userlist, setUserlist] = useState(null);
   const [role, setRole] = useState(null);
-  const [authToken, setAuthToken] = useState(localStorage.getItem("authToken")); // Get token from localStorage
+  const [authToken, setAuthToken] = useState(localStorage.getItem("authToken")); 
   const navigate = useNavigate();
-  // //fetch tests from server with post request with body having namee=student1
   useEffect(() => {
     setRole(localStorage.getItem("role"));
     if (role === "student") {
@@ -118,7 +117,7 @@ function App() {
         setUserlist,
       }}
     >
-      <Navbar title="JEE Wallah" mode={mode} setMode={setMode} />
+      <Navbar title="JEE - Tests" mode={mode} setMode={setMode} />
       <div
         className="container-fluid"
         style={{
@@ -127,7 +126,7 @@ function App() {
           marginTop: "20px", // Add margin from the top
           display: "flex",
           flexDirection: "column", // Ensure content fills the vertical space
-          backgroundImage: `url(${backgroundImage})`, // Correct path to image
+          //backgroundImage: `url(${backgroundImage})`, // Correct path to image
           backgroundRepeat: "no-repeat", // Prevent tiling
           backgroundPosition: "center", // Center the image
           backgroundSize: "cover", // Ensure the whole image is visible
@@ -145,6 +144,8 @@ function App() {
               </>
             }
           />
+
+          <Route path="/about" element={<About />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />

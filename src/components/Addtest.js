@@ -33,7 +33,7 @@ const Addtest = () => {
   const addQuestion = () => {
     setQuestions([
       ...questions,
-      { q: "", options: ["", "", ""], ans: 0, marked: -1 },
+      { q: "", options: ["", "", "", ""], ans: 0, marked: -1 },
     ]);
   };
 
@@ -63,7 +63,9 @@ const Addtest = () => {
         alert("Test added successfully!");
         setTestNum("");
         setScheduled("");
-        setQuestions([{ q: "", options: ["", "", ""], ans: 0, marked: -1 }]);
+        setQuestions([
+          { q: "", options: ["", "", "", ""], ans: 0, marked: -1 },
+        ]);
         setSelectedStudents([]);
       } else {
         alert("Failed to add test. Please try again.");
@@ -86,7 +88,7 @@ const Addtest = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="testNum" className="block text-sm font-medium">
-            Test Number:
+            Test Number :
           </label>
           <input
             type="number"
@@ -100,7 +102,7 @@ const Addtest = () => {
 
         <div>
           <label htmlFor="scheduled" className="block text-sm font-medium">
-            Scheduled Time:
+            Scheduled Time :
           </label>
           <input
             type="text"
@@ -108,6 +110,8 @@ const Addtest = () => {
             value={scheduled}
             onChange={(e) => setScheduled(e.target.value)}
             className="w-full p-2 border rounded"
+            title="MM/DD/YYYY HH:MM:SS AM/PM"
+            placeholder="MM/DD/YYYY HH:MM:SS AM/PM"
             required
           />
         </div>
@@ -115,53 +119,72 @@ const Addtest = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Questions:</label>
           {questions.map((question, index) => (
-            <div key={index} className="mb-4 border p-2 rounded">
-              <label className="block text-sm font-medium mb-1">
-                Question {index + 1}:
-              </label>
-              <input
-                type="text"
-                value={question.q}
-                onChange={(e) =>
-                  handleQuestionChange(index, "q", e.target.value)
-                }
-                className="w-full p-2 border rounded mb-2"
-                required
-              />
-              <label className="block text-sm font-medium mb-1">Options:</label>
-              {question.options.map((option, optIndex) => (
+            <div key={index} className="mb-4 border p-4 rounded-lg bg-gray-50">
+              <div className="mb-4">
+                <label className="block text-sm font-semibold mb-2">
+                  Question {index + 1}
+                </label>
                 <input
-                  key={optIndex}
                   type="text"
-                  value={option}
-                  onChange={(e) => {
-                    const updatedOptions = [...question.options];
-                    updatedOptions[optIndex] = e.target.value;
-                    handleQuestionChange(index, "options", updatedOptions);
+                  value={question.q}
+                  onChange={(e) =>
+                    handleQuestionChange(index, "q", e.target.value)
+                  }
+                  className="w-full p-2 border rounded bg-white resize-x resize-y"
+                  style={{
+                    minWidth: "1250px",
                   }}
-                  className="w-full p-2 border rounded mb-2"
-                  placeholder={`Option ${optIndex + 1}`}
                   required
                 />
-              ))}
-              <label className="block text-sm font-medium mb-1">
-                Correct Answer Index:
-              </label>
-              <input
-                type="number"
-                value={question.ans}
-                onChange={(e) =>
-                  handleQuestionChange(
-                    index,
-                    "ans",
-                    parseInt(e.target.value, 10)
-                  )
-                }
-                className="w-full p-2 border rounded"
-                required
-              />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-semibold mb-2">
+                  Options
+                </label>
+                <div className="space-y-2">
+                  {question.options.map((option, optIndex) => (
+                    <input
+                      key={optIndex}
+                      type="text"
+                      value={option}
+                      onChange={(e) => {
+                        const updatedOptions = [...question.options];
+                        updatedOptions[optIndex] = e.target.value;
+                        handleQuestionChange(index, "options", updatedOptions);
+                      }}
+                      className="w-full p-2 border rounded bg-white"
+                      placeholder={`Option ${optIndex + 1}`}
+                      required
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-sm font-semibold mb-2">
+                  Correct Answer Index
+                </label>
+                <input
+                  type="number"
+                  value={question.ans}
+                  onChange={(e) =>
+                    handleQuestionChange(
+                      index,
+                      "ans",
+                      parseInt(e.target.value, 10)
+                    )
+                  }
+                  className="w-full p-2 border rounded bg-white"
+                  placeholder="Enter correct option index (0-3)"
+                  min="0"
+                  max="3"
+                  required
+                />
+              </div>
+
               <button
-                className="bg-red-500 text-black px-4 py-2 rounded hover:bg-red-600 mt-2"
+                className="mt-4 bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200 text-sm"
                 type="button"
                 onClick={handleQuestionDelete(index)}
               >

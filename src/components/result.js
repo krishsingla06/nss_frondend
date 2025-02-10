@@ -7,14 +7,12 @@ const Result = () => {
   const context = useContext(userContext);
   const { tests } = context;
 
-  // Find the test data using testnum
   const test = tests.find((test) => test.testnum === parseInt(testnum));
 
   console.log("Test : ", test);
 
   let total = 0;
 
-  // Calculate the total correct answers
   test.questions.forEach((question) => {
     if (question.ans === question.marked) {
       total++;

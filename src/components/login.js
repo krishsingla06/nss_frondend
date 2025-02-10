@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { userContext } from "../App";
 import "./login.css";
 const Login = () => {
-  const { setNamee, role, setRole } = useContext(userContext); // Set namee after login
+  const { setNamee, role, setRole } = useContext(userContext); 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rolee, setRolee] = useState("student");
@@ -12,7 +12,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Replace this with your API call for login
     if (rolee === "student") {
       setRole("student");
       const response = await fetch("http://localhost:8000/login", {
@@ -25,18 +24,14 @@ const Login = () => {
 
       if (response.status === 200) {
         const data = await response.json();
-        await setNamee(data.username); // Set the logged-in user's name
-        // Save the JWT token in localStorage (or sessionStorage)
+        await setNamee(data.username); 
         console.log("Token : ", data.token);
         console.log("Username : ", data.username);
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("username", data.username);
         localStorage.setItem("role", "student");
 
-        // Redirect to homepage
         await navigate("/");
-        // href="/"
-        //window.location.href = "/";
       } else {
         alert("Login failed");
       }
@@ -52,25 +47,19 @@ const Login = () => {
 
       if (response.status === 200) {
         const data = await response.json();
-        await setNamee(data.username); // Set the logged-in user's name
-        // Save the JWT token in localStorage (or sessionStorage)
+        await setNamee(data.username); 
         console.log("Token : ", data.token);
         console.log("Username : ", data.username);
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("username", data.username);
         localStorage.setItem("role", "admin");
 
-        // Redirect to homepage
         await navigate("/admin");
-        // href="/"
-        //window.location.href = "/";
       } else {
         alert("Login failed");
       }
     }
   };
-
-  // Remove server-side code from here
 
   return (
     <div className="login-container">
